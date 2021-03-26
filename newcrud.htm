@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style type="text/css">
+      body {
+        background-color: skyblue;
+      }
+      .main {
+        margin-left: 100px;
+        margin-top: 50px;
+        background-color: wheat;
+        margin-right: 400px;
+        box-shadow: 2px 2px;
+        max-height: 1000px;
+    ;
+      }
+      .sub {
+        padding: 30px;
+      }
+      td {
+        margin-top: 30px;
+        margin-left: 10px;
+        border: solid white;
+
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        flex-wrap: wrap;
+        box-shadow: 2px 2px;
+        padding-top: 20px;
+      }
+      table{
+          margin-top: 20px;
+      }
+
+      tr:nth-child(odd) {
+        background-color: cadetblue;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="main">
+      <div class="sub">
+        <input
+          type="text"
+          id="in"
+          placeholder="Enter the data"
+          style="
+            background-color: rgba(255, 99, 71, 0.5);
+            color: white;
+            border-radius: 5px;
+            width: 200px;
+          "
+        />
+        <input type="hidden" id="saveindex"/>
+        <button
+          id="add"
+          style="
+            background-color: darkgreen;
+            color: white;
+            border-radius: 5px;
+            width: 75px; ;
+            position: absolute;;
+          "
+        >
+          Add Data
+        </button>
+        
+        <button
+          id="save"
+         
+          style="
+            background-color: darkgreen;
+            color: white;
+            border-radius: 5px;
+            width: 75px; 
+           display: none;
+           position: absolute;
+          "
+        >save</button>
+        <div>
+          <table id="showD"></table>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      var userInpur = document.getElementById("in");
+      var addButton = document.getElementById("add");
+      var deleButton = document.getElementById("delete");
+
+      addButton.addEventListener("click", function () {
+        taskinput = userInpur.value;
+        if (taskinput.trim() != 0) {
+          let webtask = localStorage.getItem("loacaltask");
+          if (webtask == null) {
+            taskobj = [];
+          } else {
+            taskobj = JSON.parse(webtask);
+          }
+          taskobj.push(taskinput);
+          localStorage.setItem("loacaltask", JSON.stringify(taskobj));
+          showtask();
+        }
+
+       
+      });
+      function showtask() {
+        let webtask = localStorage.getItem("loacaltask");
+        if (webtask == null) {
+          taskobj = [];
+        } else {
+          taskobj = JSON.parse(webtask);
+        }
+        taskobj.push(taskinput);
+        let html = "";
+        let addtaskList = document.getElementById("showD");
+        taskobj.forEach((item, index) => {
+          html += ` <tr>
+                    <td>${index+1}</td>
+              <td>${item}</td>
+              <td><a href="#" onclick="editValue(${index})">Edit</a></td>
+              <td><a href="#" onclick="deleteValue(${index})">Delete</a></td>
+            </tr>`;
+        });
+        document.getElementById("showD").innerHTML = html;
+      }
+      function editValue(index){
+        let saveindex=document.getElementById("saveindex");
+        
+          let saveValue=document.getElementById("save");
+          saveindex.value=index;
+          let webtask=localStorage.getItem("loacaltask");
+
+          let taskobj=JSON.parse(webtask);
+
+
+        userInpur.value=taskobj[index];
+            addButton.style.display="none";
+            saveValue.style.display="block";
+
+      }
+      let saveValue=document.getElementById("save");
+      saveValue.addEventListener("click",function(){
+          let webtask=localStorage.getItem("loacaltask");
+          let taskobj=JSON.parse(webtask);
+          let saveindex=document.getElementById("saveindex").value;
+          taskobj[saveindex]=userInpur.value;
+          saveValue.style.display="none"
+          addButton.style.display="block"
+          localStorage.setItem("loacaltask",JSON.stringify(taskobj));
+          showtask();
+
+      })
+      function deleteValue(index){
+        let webtask=localStorage.getItem("loacaltask");
+          let taskobj=JSON.parse(webtask);
+          taskobj.splice(index,1);
+          localStorage.setItem("loacaltask",JSON.stringify(taskobj))
+          showtask();
+      }
+      
+    </script>
+  </body>
+</html>
